@@ -121,6 +121,15 @@ class FormParserByID(FormParser):
     def in_form(self, attrs):
         return attrs.get('id') == self.form_id
 
+class FormParserByName(FormParser):
+    """Form parser, load form data and action for given form identified
+    by its id"""
+    def __init__(self, form_name, *args, **kwargs):
+        FormParser.__init__(self, *args, **kwargs)
+        self.form_name = form_name
+
+    def in_form(self, attrs):
+        return attrs.get('name') == self.form_name
 
 class RefreshParser(CustomParser):
     """Refresh parser, will check refresh by meta tag and store refresh URL"""
