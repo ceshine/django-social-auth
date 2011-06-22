@@ -17,11 +17,11 @@ WEIBO_OAUTH_ACCESS_TOKEN_URL = 'http://%s/%s/access_token' % (WEIBO_OAUTH_HOST, 
 
 WEIBO_CHECK_AUTH = 'http://%s/account/verify_credentials.json' % WEIBO_OAUTH_HOST
 
-EXPIRES_NAME = getattr(settings, 'SOCIAL_AUTH_EXPIRATION', 'expires')
-
 class WeiboBackend(OAuthBackend):
     """Weibo OAuth authentication backend"""
     name = 'weibo'
+    
+    EXTRA_DATA = [('profile_image_url','avatar_url'), ('id','id')]
     
     def get_user_details(self, response):
         """Return user details from Weibo account"""
@@ -50,7 +50,7 @@ class WeiboAuth(ConsumerBasedOAuth):
             return simplejson.loads(json)
         except ValueError:
             return None
-    
+        
     @classmethod
     def enabled(cls):
         """Return backend enabled status by checking basic settings"""
