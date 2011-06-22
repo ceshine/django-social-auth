@@ -29,7 +29,7 @@ class WeiboBackend(OAuthBackend):
         return {USERNAME: username,
                 'email': '',  # not supplied
                 'fullname': username,
-                'first_name': '',
+                'first_name': username,
                 'last_name': ''}
         
 class WeiboAuth(ConsumerBasedOAuth):
