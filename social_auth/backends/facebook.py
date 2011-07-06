@@ -17,6 +17,7 @@ import urllib
 from django.conf import settings
 from django.utils import simplejson
 from django.contrib.auth import authenticate
+from django.core.files import File
 
 from social_auth.backends import BaseOAuth, OAuthBackend, USERNAME
 
@@ -42,6 +43,7 @@ class FacebookBackend(OAuthBackend):
                 'fullname': response['name'],
                 'first_name': response.get('first_name', ''),
                 'last_name': response.get('last_name', '')}
+
 
 
 class FacebookAuth(BaseOAuth):
@@ -77,7 +79,16 @@ class FacebookAuth(BaseOAuth):
                 if 'expires' in response:
                     data['expires'] = response['expires'][0]
             kwargs.update({'response': data, FacebookBackend.name: True})
-            return authenticate(*args, **kwargs)
+            user = authenticate(*args, **kwargs)
+            response = kwargs.get("response")       
+            url = 'http://graph.facebook.com/%s/picture' % response['id']
+            result = urllib.urlretrieve(url)
+            user.profile.photo.save(
+                response['id']+".jpg",
+                File(open(result[0]))
+                )
+            user.profile.save()
+            return user
         else:
             error = self.data.get('error') or 'unknown error'
             raise ValueError('Authentication error: %s' % error)
