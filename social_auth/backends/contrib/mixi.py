@@ -19,17 +19,13 @@ MIXI_OAUTH_SCOPE = ['r_profile']
 MIXIAPIS_SELF = 'http://api.mixi-platform.com/2/people/@me/@self'
 
 # Backends
-class MixiOAuth2Backend(OAuthBackend):
+class MixiBackend(OAuthBackend):
     """Mixi OAuth 2.0 authentication backend"""
     name = 'mixi-oauth2'
     EXTRA_DATA = [('id','id'), 
                   ('thumbnailUrl','avatar_url'),
                   ('refresh_token', 'refresh_token'),
                   ('expires_in', EXPIRES_NAME)]
-
-    def get_user_id(self, details, response):
-        "Use google email as unique id"""
-        return details['email']
 
     def get_user_details(self, response):
         """Return user details from Orkut account"""
@@ -43,7 +39,7 @@ class MixiOAuth2Backend(OAuthBackend):
 
 class MixiOAuth2(BaseOAuth2):
     """Mixi OAuth2 support"""
-    AUTH_BACKEND = MixiOAuth2Backend
+    AUTH_BACKEND = MixiBackend
     AUTHORIZATION_URL = MIXI_OATUH2_AUTHORIZATION_URL
     ACCESS_TOKEN_URL = MIXI_OAUTH2_ACCESS_TOKEN_URL
     SETTINGS_KEY_NAME = 'MIXI_OAUTH2_CLIENT_KEY'
@@ -53,7 +49,7 @@ class MixiOAuth2(BaseOAuth2):
         return MIXI_OAUTH_SCOPE + getattr(settings, 'MIXI_OAUTH_EXTRA_SCOPE', [])
 
     def user_data(self, access_token):
-        """Return user data from Google API"""
+        """Return user data from Mixi API"""
         data = {'oauth_token': access_token}
         return mixiapis_self(MIXIAPIS_SELF, urlencode(data))
 
@@ -74,9 +70,12 @@ def mixiapis_self(url, params):
     """
     request = Request(url + '?' + params, headers={'Authorization': params})
     try:
-        return simplejson.loads(urlopen(request).read())['entry'][0]
+        return simplejson.loads(urlopen(request).read())['entry']
     except (ValueError, KeyError, IOError):
         return None
 
 
-
+# Backend definition
+BACKENDS = {
+    'mixi': MixiOAuth2,
+}
