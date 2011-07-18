@@ -72,6 +72,7 @@ def complete_process(request, backend):
 
         # store last login backend name in session
         request.session[SOCIAL_AUTH_LAST_LOGIN] = social_user.provider
+        request.session['NEW_SESSION'] = True
     else:
         url = LOGIN_ERROR_URL
     return HttpResponseRedirect(url)
