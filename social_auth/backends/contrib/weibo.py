@@ -26,10 +26,10 @@ class WeiboBackend(OAuthBackend):
     def get_user_details(self, response):
         """Return user details from Weibo account"""
         username = response['screen_name']
-        return {USERNAME: username,
+        return {USERNAME: 'w' + response.get('id'),
                 'email': '',  # not supplied
                 'fullname': username,
-                'first_name': username,
+                'first_name': '',
                 'last_name': ''}
         
 class WeiboAuth(ConsumerBasedOAuth):
