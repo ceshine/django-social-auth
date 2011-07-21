@@ -29,7 +29,7 @@ class MixiBackend(OAuthBackend):
 
     def get_user_details(self, response):
         """Return user details from Orkut account"""
-        return {USERNAME: response.get('id'),
+        return {USERNAME: 'm' + str(response.get('id')),
                 'email': '',
                 'fullname': response.get('displayName', ''),
                 'first_name': '',

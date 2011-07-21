@@ -38,7 +38,7 @@ class FacebookBackend(OAuthBackend):
 
     def get_user_details(self, response):
         """Return user details from Facebook account"""
-        return {USERNAME: response.get('email') or ('f' + response.get('id')),
+        return {USERNAME: response.get('email') or ('f' + str(response.get('id'))),
                 'email': response.get('email', ''),
                 'fullname': response['name'],
                 'first_name': response.get('first_name', ''),

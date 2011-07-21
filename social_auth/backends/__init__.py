@@ -98,8 +98,8 @@ class SocialAuthBackend(ModelBackend):
         # authenticate.
         if not (self.name and kwargs.get(self.name) and 'response' in kwargs):
             return None
-
-        response = kwargs.get('response')
+        
+	response = kwargs.get('response')
         details = self.get_user_details(response)
         uid = self.get_user_id(details, response)
         is_new = False
@@ -110,7 +110,6 @@ class SocialAuthBackend(ModelBackend):
             if user is None:  # new user
                 if not CREATE_USERS:
                     return None
-
                 email = details.get('email')
                 if email and ASSOCIATE_BY_MAIL:
                     # try to associate accounts registered with the same email
