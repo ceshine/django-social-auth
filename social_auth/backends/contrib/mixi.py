@@ -33,7 +33,7 @@ class MixiBackend(OAuthBackend):
                 'email': '',
                 'fullname': response.get('displayName', ''),
                 'first_name': '',
-                'last_name': ''}
+                'last_name': response.get('displayName', '')}
 
 
 class MixiOAuth2(BaseOAuth2):

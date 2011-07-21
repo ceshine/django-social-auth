@@ -30,7 +30,7 @@ class WeiboBackend(OAuthBackend):
                 'email': '',  # not supplied
                 'fullname': username,
                 'first_name': '',
-                'last_name': ''}
+                'last_name': username}
         
 class WeiboAuth(ConsumerBasedOAuth):
     """Weibo OAuth authentication mechanism"""
