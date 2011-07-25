@@ -44,6 +44,8 @@ def complete_process(request, backend):
 
     try:
         user = backend.auth_complete()
+        if user.is_new:
+            request.session['NEWUSER'] = True
     except ValueError, e:  # some Authentication error ocurred
         user = None
         error_key = getattr(settings, 'SOCIAL_AUTH_ERROR_KEY', None)
