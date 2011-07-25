@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.contrib.auth import login, REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import login_required
+from django.contrib.gis.utils.geoip import GeoIP
 
 from social_auth.backends import get_backend
 from social_auth.utils import sanitize_redirect
@@ -75,6 +76,13 @@ def complete_process(request, backend):
         # store last login backend name in session
         request.session[SOCIAL_AUTH_LAST_LOGIN] = social_user.provider
         request.session['NEW_SESSION'] = True
+    
+        g = GeoIP()
+        country_name = g.country(request.META['REMOTE_ADDR'])['country_name']
+        if country_name:
+            user.profile.location = country_name
+            user.profile.save()
+
     else:
         url = LOGIN_ERROR_URL
     return HttpResponseRedirect(url)
