@@ -78,9 +78,12 @@ def complete_process(request, backend):
         request.session['NEW_SESSION'] = True
     
         g = GeoIP()
-        country_name = g.country(request.META['REMOTE_ADDR'])['country_name']
-        if country_name:
-            user.profile.location = country_name
+        ginfo = g.city(request.META['REMOTE_ADDR'])
+        if ginfo:
+            if ginfo['city'] != None:
+                user.profile.location = ginfo['country_name']
+            else:
+                user.profile.location = ginfo['city'] + ", " +ginfo['country_name']
             user.profile.save()
 
     else:
